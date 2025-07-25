@@ -1,4 +1,5 @@
 📝 Simple To-Do List Application
+Live Demo: https://rodrianaa.github.io/todo-list/
 A responsive and interactive To-Do list application built with vanilla JavaScript, HTML, and CSS. This app allows users to manage their daily tasks, offering a straightforward way to add, complete, delete, and filter To-Do items, with all data persistently stored in the browser's local storage.
 
 ✨ Features
