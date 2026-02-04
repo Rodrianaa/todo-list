@@ -246,15 +246,18 @@ function toggleTheme() {
   document.body.classList.toggle("dark");
   const isDark = document.body.classList.contains("dark");
   localStorage.setItem("theme", isDark ? "dark" : "light");
-  themeToggle.textContent = isDark ? "☀️" : "🌙";
+  themeToggle.innerHTML = isDark
+    ? '<i class="fas fa-sun"></i>'
+    : '<i class="fas fa-moon"></i>';
 }
 
 function loadTheme() {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     document.body.classList.add("dark");
-    themeToggle.textContent = "☀️";
+    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
   } else {
-    themeToggle.textContent = "🌙";
+    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
   }
 }
+
