@@ -4,37 +4,134 @@ const todoInput = document.querySelector(".todo-input");
 const todoForm = document.querySelector(".todo-form");
 const todoList = document.querySelector(".todolist");
 const selectFilter = document.querySelector(".filter-todos");
+const clearCompletedBtn = document.querySelector(".clear-completed");
+const taskCounter = document.querySelector(".task-counter");
+const themeToggle = document.querySelector(".theme-toggle");
 
-// Load todos on page load
+// --------------------
+// Event Listeners
+// --------------------
+todoForm.addEventListener("submit", addNewTodo);
+selectFilter.addEventListener("change", (e) => {
+  filterValue = e.target.value;
+  filterTodos();
+});
+clearCompletedBtn.addEventListener("click", clearCompletedTodos);
+themeToggle.addEventListener("click", toggleTheme);
+
 document.addEventListener("DOMContentLoaded", () => {
-  renderTodos(getAllTodos());
+  loadTheme();
+  filterTodos();
+  updateCounter();
 });
 
-// Add new todo
-todoForm.addEventListener("submit", (e) => {
+// Keyboard support
+todoInput.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    todoInput.value = "";
+  }
+});
+
+// --------------------
+// Core Functions
+// --------------------
+function addNewTodo(e) {
   e.preventDefault();
+
   const title = todoInput.value.trim();
   if (!title) return;
 
   const newTodo = {
     id: Date.now(),
-    title,
     createdAt: new Date().toISOString(),
-    isCompleted: false
+    title,
+    isCompleted: false,
   };
 
   saveTodo(newTodo);
   todoInput.value = "";
-  renderTodos(getAllTodos());
-});
+  filterTodos();
+}
 
-// Filter change
-selectFilter.addEventListener("change", (e) => {
-  filterValue = e.target.value;
-  renderTodos(getAllTodos());
-});
+function createTodos(todos) {
+  todoList.innerHTML = "";
 
-// Functions
+  todos.forEach((todo) => {
+    const li = document.createElement("li");
+    li.className = "todo";
+    if (todo.isCompleted) li.classList.add("completed");
+
+    li.innerHTML = `
+      <p class="todo__title">${todo.title}</p>
+      <span class="todo__createdAt">${new Date(todo.createdAt).toLocaleDateString("fa-IR")}</span>
+      <button class="todo__check" data-id="${todo.id}">
+        <i class="far fa-check-square"></i>
+      </button>
+      <button class="todo__remove" data-id="${todo.id}">
+        <i class="far fa-trash-alt"></i>
+      </button>
+    `;
+
+    todoList.appendChild(li);
+  });
+
+  const removeBtns = document.querySelectorAll(".todo__remove");
+  removeBtns.forEach((btn) => btn.addEventListener("click", removeTodo));
+
+  const checkBtns = document.querySelectorAll(".todo__check");
+  checkBtns.forEach((btn) => btn.addEventListener("click", toggleComplete));
+
+  updateCounter();
+}
+
+function filterTodos() {
+  const todos = getAllTodos();
+
+  let filteredTodos = todos;
+
+  if (filterValue === "completed") {
+    filteredTodos = todos.filter((t) => t.isCompleted);
+  } else if (filterValue === "uncompleted") {
+    filteredTodos = todos.filter((t) => !t.isCompleted);
+  }
+
+  createTodos(filteredTodos);
+}
+
+function removeTodo(e) {
+  const todoId = Number(e.currentTarget.dataset.id);
+  let todos = getAllTodos();
+  todos = todos.filter((t) => t.id !== todoId);
+  saveAllTodos(todos);
+  filterTodos();
+}
+
+function toggleComplete(e) {
+  const todoId = Number(e.currentTarget.dataset.id);
+  const todos = getAllTodos();
+  const todo = todos.find((t) => t.id === todoId);
+  todo.isCompleted = !todo.isCompleted;
+  saveAllTodos(todos);
+  filterTodos();
+}
+
+function clearCompletedTodos() {
+  let todos = getAllTodos();
+  todos = todos.filter((t) => !t.isCompleted);
+  saveAllTodos(todos);
+  filterTodos();
+}
+
+function updateCounter() {
+  const todos = getAllTodos();
+  const remaining = todos.filter((t) => !t.isCompleted).length;
+  taskCounter.textContent =
+    remaining === 1 ? "1 task left" : `${remaining} tasks left`;
+}
+
+// --------------------
+// Local Storage
+// --------------------
 function getAllTodos() {
   return JSON.parse(localStorage.getItem("todos")) || [];
 }
@@ -49,42 +146,22 @@ function saveAllTodos(todos) {
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-function renderTodos(todos) {
-  let filtered = todos;
-  if (filterValue === "completed") filtered = todos.filter(t => t.isCompleted);
-  if (filterValue === "uncompleted") filtered = todos.filter(t => !t.isCompleted);
-
-  todoList.innerHTML = filtered.map(todo => `
-    <li class="todo">
-      <p class="todo__title ${todo.isCompleted ? "completed" : ""}">${todo.title}</p>
-      <span class="todo__createdAt">${new Date(todo.createdAt).toLocaleDateString("fa-IR")}</span>
-      <button class="todo__check" data-id="${todo.id}" title="Toggle Complete"><i class="far fa-check-square"></i></button>
-      <button class="todo__remove" data-id="${todo.id}" title="Remove"><i class="far fa-trash-alt"></i></button>
-    </li>
-  `).join("");
-
-  // Add event listeners for buttons
-  document.querySelectorAll(".todo__check").forEach(btn => {
-    btn.addEventListener("click", () => toggleComplete(btn.dataset.id));
-  });
-  document.querySelectorAll(".todo__remove").forEach(btn => {
-    btn.addEventListener("click", () => removeTodo(btn.dataset.id));
-  });
+// --------------------
+// Theme (Dark Mode)
+// --------------------
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  themeToggle.textContent = isDark ? "☀️" : "🌙";
 }
 
-function toggleComplete(id) {
-  const todos = getAllTodos();
-  const todo = todos.find(t => t.id == id);
-  if (todo) {
-    todo.isCompleted = !todo.isCompleted;
-    saveAllTodos(todos);
-    renderTodos(todos);
+function loadTheme() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+  } else {
+    themeToggle.textContent = "🌙";
   }
-}
-
-function removeTodo(id) {
-  let todos = getAllTodos();
-  todos = todos.filter(t => t.id != id);
-  saveAllTodos(todos);
-  renderTodos(todos);
 }
