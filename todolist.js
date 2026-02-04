@@ -1,5 +1,3 @@
-
-// let todos = [];
 let filterValue = "all";
 
 const todoInput = document.querySelector(".todo-input");
@@ -7,125 +5,86 @@ const todoForm = document.querySelector(".todo-form");
 const todoList = document.querySelector(".todolist");
 const selectFilter = document.querySelector(".filter-todos");
 
-// events
-
-todoForm.addEventListener("submit", addNewTodo);
-selectFilter.addEventListener("change", (e) => {
-  filterValue = e.target.value;
-  filterTodos();
+// Load todos on page load
+document.addEventListener("DOMContentLoaded", () => {
+  renderTodos(getAllTodos());
 });
 
-document.addEventListener("DOMContentLoaded", (e) => {
-  const todos = getAllTodos();
-  createTodos(todos);
-});
-
-function addNewTodo(e) {
+// Add new todo
+todoForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  if (!todoInput.value) return null;
+  const title = todoInput.value.trim();
+  if (!title) return;
 
   const newTodo = {
     id: Date.now(),
+    title,
     createdAt: new Date().toISOString(),
-    title: todoInput.value,
-    isCompleted: false,
+    isCompleted: false
   };
 
-  // todos.push(newTodo);
   saveTodo(newTodo);
-  filterTodos();
-}
-
-function createTodos(todos) {
-  // create todos on DOM
-  let result = "";
-  todos.forEach((todo) => {
-    result += `<li class="todo">
-      <p class="todo__title ${todo.isCompleted && "completed"}">${
-      todo.title
-    }</p>
-      <span class="todo__createdAt">${new Date(
-        todo.createdAt
-      ).toLocaleDateString("fa-IR")}</span>
-      <button class="todo__check" data-todo-id=${
-        todo.id
-      } ><i class="far fa-check-square"></i></button>
-      <button class="todo__remove" data-todo-id=${
-        todo.id
-      } ><i class="far fa-trash-alt"></i></button>
-    </li>`;
-  });
-
-  todoList.innerHTML = result;
   todoInput.value = "";
+  renderTodos(getAllTodos());
+});
 
-  const removeBtns = [...document.querySelectorAll(".todo__remove")];
-  removeBtns.forEach((btn) => btn.addEventListener("click", removeTodo));
+// Filter change
+selectFilter.addEventListener("change", (e) => {
+  filterValue = e.target.value;
+  renderTodos(getAllTodos());
+});
 
-  const checkBtns = [...document.querySelectorAll(".todo__check")];
-  checkBtns.forEach((btn) => btn.addEventListener("click", checkTodo));
-}
-
-function filterTodos() {
-  // console.log(e.target.value);
-  // const filter = e.target.value;
-  const todos = getAllTodos();
-  switch (filterValue) {
-    case "all": {
-      createTodos(todos);
-      break;
-    }
-    case "completed": {
-      const filteredTodos = todos.filter((t) => t.isCompleted);
-      createTodos(filteredTodos);
-      break;
-    }
-    case "uncompleted": {
-      const filteredTodos = todos.filter((t) => !t.isCompleted);
-      createTodos(filteredTodos);
-      break;
-    }
-    default:
-      createTodos(todos);
-  }
-}
-
-function removeTodo(e) {
-  // console.log(e.target.dataset.todoId);
-  // data-todo-id => todoId
-  let todos = getAllTodos();
-  const todoId = Number(e.target.dataset.todoId);
-  todos = todos.filter((t) => t.id !== todoId);
-  saveAllTodos(todos);
-  filterTodos();
-}
-
-function checkTodo(e) {
-  // console.log(e.target.dataset.todoId);
-  const todos = getAllTodos();
-  const todoId = Number(e.target.dataset.todoId);
-  const todo = todos.find((t) => t.id === todoId);
-  todo.isCompleted = !todo.isCompleted;
-  saveAllTodos(todos);
-  filterTodos();
-}
-
-// localStorage => web API
-
+// Functions
 function getAllTodos() {
-  const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-  return savedTodos;
+  return JSON.parse(localStorage.getItem("todos")) || [];
 }
 
 function saveTodo(todo) {
-  // const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-  const savedTodos = getAllTodos();
-  savedTodos.push(todo);
-  localStorage.setItem("todos", JSON.stringify(savedTodos));
-  return savedTodos;
+  const todos = getAllTodos();
+  todos.push(todo);
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
 
 function saveAllTodos(todos) {
   localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+function renderTodos(todos) {
+  let filtered = todos;
+  if (filterValue === "completed") filtered = todos.filter(t => t.isCompleted);
+  if (filterValue === "uncompleted") filtered = todos.filter(t => !t.isCompleted);
+
+  todoList.innerHTML = filtered.map(todo => `
+    <li class="todo">
+      <p class="todo__title ${todo.isCompleted ? "completed" : ""}">${todo.title}</p>
+      <span class="todo__createdAt">${new Date(todo.createdAt).toLocaleDateString("fa-IR")}</span>
+      <button class="todo__check" data-id="${todo.id}" title="Toggle Complete"><i class="far fa-check-square"></i></button>
+      <button class="todo__remove" data-id="${todo.id}" title="Remove"><i class="far fa-trash-alt"></i></button>
+    </li>
+  `).join("");
+
+  // Add event listeners for buttons
+  document.querySelectorAll(".todo__check").forEach(btn => {
+    btn.addEventListener("click", () => toggleComplete(btn.dataset.id));
+  });
+  document.querySelectorAll(".todo__remove").forEach(btn => {
+    btn.addEventListener("click", () => removeTodo(btn.dataset.id));
+  });
+}
+
+function toggleComplete(id) {
+  const todos = getAllTodos();
+  const todo = todos.find(t => t.id == id);
+  if (todo) {
+    todo.isCompleted = !todo.isCompleted;
+    saveAllTodos(todos);
+    renderTodos(todos);
+  }
+}
+
+function removeTodo(id) {
+  let todos = getAllTodos();
+  todos = todos.filter(t => t.id != id);
+  saveAllTodos(todos);
+  renderTodos(todos);
 }
