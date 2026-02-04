@@ -171,12 +171,12 @@ form button:hover {
   .todo-container {
     width: 100%;
   }
-  form {
-    flex-direction: column;
-  }
   .select {
     width: 100%;
     margin-left: 0;
     margin-top: 0.5rem;
+  }
+    .form-container{
+    flex-direction:inherit
   }
 }
