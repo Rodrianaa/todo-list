@@ -1,25 +1,56 @@
-📝 Simple To-Do List Application
-Live Demo: https://rodrianaa.github.io/todo-list/
-A responsive and interactive To-Do list application built with vanilla JavaScript, HTML, and CSS. This app allows users to manage their daily tasks, offering a straightforward way to add, complete, delete, and filter To-Do items, with all data persistently stored in the browser's local storage.
+# 📝 Todo App
 
-✨ Features
-Add New Tasks: Quickly add new To-Do items to your list.
+A modern, responsive, and feature-rich Todo application built with **HTML, CSS, and JavaScript**.  
+Designed with clean UI/UX principles and real-world usability in mind.
 
-Mark as Complete/Incomplete: Toggle the completion status of tasks.
+---
 
-Delete Tasks: Remove unwanted tasks from your list.
+## 🚀 Live Demo
+👉 https://rodrianaa.github.io/todo-list/
 
-Filter Tasks: View all tasks, only completed tasks, or only uncompleted tasks.
+---
 
-Persistence: All your tasks are saved in your browser's local storage, so they remain even if you close and reopen the browser.
+## ✨ Features
 
-Responsive Design: Adapts to different screen sizes (styling in style.css not included in this README, but implied by the HTML structure).
+- ✅ Add, complete, delete, and edit tasks
+- 🎯 Filter tasks: All / Completed / Uncompleted
+- 🌙 Light & Dark mode with saved preference
+- 💾 Persistent storage using LocalStorage
+- 🧮 Task counter (remaining tasks)
+- 🧹 Clear completed tasks with one click
+- ✏️ Inline task editing
+- 🧲 Drag & drop to reorder tasks
+- ⌨️ Keyboard support (Enter, Escape)
+- 📱 Fully responsive design
 
-🚀 Technologies Used
-HTML5: For the basic structure of the web page.
+---
 
-CSS3: For styling and layout (via style.css).
+## 🛠️ Technologies Used
 
-JavaScript (Vanilla JS): For all application logic and DOM manipulation.
+- HTML5
+- CSS3 (Flexbox, CSS Variables, Responsive Design)
+- Vanilla JavaScript (ES6+)
+- Web APIs (LocalStorage, Drag & Drop API)
 
-Font Awesome: For the add, check, and trash icons.
+---
+
+## 📸 Screenshots
+
+*(Add screenshots or a short GIF of the app here)*
+
+---
+
+## 🧠 What I Learned
+
+- DOM manipulation and event handling
+- State management using browser storage
+- UI/UX design principles
+- Implementing drag & drop behavior
+- Writing clean, maintainable JavaScript
+
+---
+
+## 📬 Contact
+
+Feel free to reach out:
+- GitHub: https://github.com/Rodrianaa
