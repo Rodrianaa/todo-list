@@ -45,7 +45,7 @@ header {
   position: relative;
   flex-direction: row;
   display: flex;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 }
 
 header h1 {
