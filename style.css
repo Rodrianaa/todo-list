@@ -284,3 +284,12 @@ header h1 {
     flex-direction: column;
   }
 }
+.todo.dragging {
+  opacity: 0.5;
+  background: var(--primary-light);
+  border: 2px dashed var(--primary);
+}
+
+.todo__edit i {
+  color: #10b981;
+}
