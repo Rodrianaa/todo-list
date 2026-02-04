@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TodoApp</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo App</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 </head>
-
 <body>
   <header>
     <h1>Todo List</h1>
+    <button class="theme-toggle" title="Toggle dark mode">
+      🌙
+    </button>
   </header>
 
   <section class="container">
     <div class="form-container">
       <form class="todo-form">
         <input type="text" class="todo-input" placeholder="Add a new task..." />
-        <button class="add-todo" type="submit" title="Add Task">
-          <i class="fas fa-plus-circle"></i>
+        <button class="add-todo" type="submit">
+          <i class="fas fa-plus"></i>
         </button>
       </form>
 
-      <div class="select">
-        <select class="filter-todos" name="todos">
-          <option value="all">All</option>
-          <option value="completed">Completed</option>
-          <option value="uncompleted">Uncompleted</option>
-        </select>
+      <div class="controls">
+        <div class="select">
+          <select class="filter-todos" name="todos">
+            <option value="all">All</option>
+            <option value="completed">Completed</option>
+            <option value="uncompleted">Uncompleted</option>
+          </select>
+        </div>
+        <button class="clear-completed">Clear Completed</button>
       </div>
     </div>
 
     <div class="todo-container">
-      <ul class="todolist">
-        <!-- Todos will be generated here -->
-      </ul>
+      <ul class="todolist"></ul>
     </div>
+
+    <footer class="footer">
+      <span class="task-counter">0 tasks left</span>
+    </footer>
   </section>
 
   <script src="./todolist.js"></script>
 </body>
-
 </html>
