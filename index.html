@@ -14,16 +14,18 @@
 
 <body>
   <header>
-    <h1>todo list</h1>
+    <h1>Todo List</h1>
   </header>
+
   <section class="container">
     <div class="form-container">
       <form class="todo-form">
-        <input type="text" class="todo-input" />
-        <button class="add-todo" type="submit">
+        <input type="text" class="todo-input" placeholder="Add a new task..." />
+        <button class="add-todo" type="submit" title="Add Task">
           <i class="fas fa-plus-circle"></i>
         </button>
       </form>
+
       <div class="select">
         <select class="filter-todos" name="todos">
           <option value="all">All</option>
@@ -32,17 +34,14 @@
         </select>
       </div>
     </div>
+
     <div class="todo-container">
       <ul class="todolist">
-        <!-- <li class="todo">
-          <p class="todo__title">todo #1</p>
-          <span class="todo__createdAt">1402/1/28</span>
-          <button><i class="todo__check far fa-check-square"></i></button>
-          <button><i class="todo__remove far fa-trash-alt"></i></button>
-        </li> -->
+        <!-- Todos will be generated here -->
       </ul>
     </div>
   </section>
+
   <script src="./todolist.js"></script>
 </body>
 
